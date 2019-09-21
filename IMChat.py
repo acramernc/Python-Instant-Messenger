@@ -12,7 +12,9 @@ def send():
         name = input("Please enter your name:")
         while True:
             msg = input(name + ": ")
-            s.sendall(name + ": " + msg)
+            msg = name + ": " + msg
+            msg = msg.encode("utf-8")
+            s.sendall(msg)
             if not alive: break
 
 
@@ -27,7 +29,7 @@ def rcv():
                 #data = ""
                 data = conn.recv(1024)
                 if not data: break
-                print(data)
+                print(data.decode('utf-8'))
 
 
 rThread = threading.Thread(target=rcv)
