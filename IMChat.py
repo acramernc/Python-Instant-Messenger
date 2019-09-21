@@ -1,11 +1,11 @@
-import socket, threading, time
+import socket, threading, time, re
 
 print("Welcome to GCC IM\n")
 hostName = socket.gethostname()
 myIP = socket.gethostbyname(hostName)
 print("Your ip is ", myIP)
 port = 25565
-
+BYE = re.compile("bye", re.I)
 
 
 
@@ -20,11 +20,16 @@ def send():
         while True:
             time.sleep(.2)
             msg = input(name + ": ")
-            if msg.lower() == "bye": kill = True
-            msg = name + ": " + msg
-            msg = msg.encode("utf-8")
-            s.sendall(msg)
-            if kill: break
+            if msg:
+                if BYE.search(msg):
+                    msg = name + ": " + msg
+                    msg = msg.encode('utf-8')
+                    s.sendall(msg)
+                    break
+                else:
+                    msg = name + ": " + msg
+                    msg = msg.encode('utf-8')
+                    s.sendall(msg)
 
 
 def rcv():
