@@ -1,4 +1,4 @@
-import socket, threading, re
+import socket, threading, re, sys
 
 HOST = ''
 PORT = 25565
@@ -34,9 +34,11 @@ def receive():
 def send():
     sending_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    # NEEDS BETTER EXCEPTION HANDLING
     try:
+        print("Trying to connect on " + str(otherIP) + ":" + str(PORT) + "...")
         sending_socket.connect((otherIP, PORT))
-    except:
+    except (socket.timeout, socket.gaierror):
         print("\nUnable to connect to that IP address.")
 
     print("Connection successful!")
@@ -61,3 +63,5 @@ receiving_thread = threading.Thread(target=receive, name="rthread")
 
 receiving_thread.start()
 sending_thread.start()
+
+# NEEDS BETTER FORMATTING
