@@ -1,21 +1,30 @@
-import socket, threading
+import socket, threading, time
 
 print("Welcome to GCC IM\n")
-otherIP = input("Please enter the target IPv4 address")
+hostName = socket.gethostname()
+myIP = socket.gethostbyname(hostName)
+print("Your ip is ", myIP)
 port = 25565
-alive = True
+
+
 
 
 def send():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        print("Trying to connect")
         s.connect((otherIP, port))
+        time.sleep(.2)
+        print("Connection Successful")
         name = input("Please enter your name:")
+        kill = False
         while True:
+            time.sleep(.2)
             msg = input(name + ": ")
+            if msg.lower() == "bye": kill = True
             msg = name + ": " + msg
             msg = msg.encode("utf-8")
             s.sendall(msg)
-            if not alive: break
+            if kill: break
 
 
 def rcv():
@@ -29,14 +38,18 @@ def rcv():
                 #data = ""
                 data = conn.recv(1024)
                 if not data: break
-                print(data.decode('utf-8'))
+                rmsg = data.decode('utf-8')
+                print(rmsg)
+            print("The other client has disconnected")
 
 
 rThread = threading.Thread(target=rcv)
 sThread = threading.Thread(target=send)
 
 rThread.start()
+
+otherIP = input("Please enter the target IPv4 address")
+
 sThread.start()
 
-while True:
-    alive = rThread.is_alive()
+
