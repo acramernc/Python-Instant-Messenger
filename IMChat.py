@@ -2,14 +2,12 @@
 
 import socket, threading, time, sys
 
-print("Welcome to GCC IM\n")
+print("Welcome to GCC IM, Made by Adam Cramer and Brendan Ortmann\n")
 hostName = socket.gethostname()
 myIP = socket.gethostbyname(hostName)
 print("Your ip is ", myIP)
 port = 25565
 alive = True
-
-#BYE = re.compile("bye", re.I)
 
 
 
@@ -19,16 +17,13 @@ def send():
         try:
             print("Trying to connect on " + str(otherIP) + ":" + str(port) + "...")
             s.connect((otherIP, port))
-        except (socket.timeout, socket.gaierror):
+        except (socket.timeout, socket.gaierror, TimeoutError):
             print("\nUnable to connect to that IP address.")
             alive = False
             sys.exit(0)
-        #print("Trying to connect")
-        #s.connect((otherIP, port))
         time.sleep(.2)
         print("Connection Successful")
         name = input("Please enter your name:")
-        #kill = False
         while True:
             time.sleep(.2)
             msg = input(name + ": ")
@@ -38,16 +33,6 @@ def send():
             s.sendall(msg)
             if not alive: break
         return
-#            if msg:
- #               if BYE.search(msg):
-  #                  msg = name + ": " + msg
-   #                 msg = msg.encode('utf-8')
-    #                s.sendall(msg)
-     #               break
-      #          else:
-       #             msg = name + ": " + msg
-        #            msg = msg.encode('utf-8')
-         #           s.sendall(msg)
 
 
 def rcv():
@@ -59,7 +44,6 @@ def rcv():
         with conn:
             print('\nConnected by', addr)
             while True:
-                #data = ""
                 data = conn.recv(1024)
                 if not data: break
                 rmsg = data.decode('utf-8')
